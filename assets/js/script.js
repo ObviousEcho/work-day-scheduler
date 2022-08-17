@@ -75,10 +75,11 @@ function appendBlockWithTime() {
     var addHour = moment(setHour).add(numerator, "h");
     // sets display format
     var displayHour = addHour.format("h a");
-
-    //   passing in hour as an argument during function call
+    
+    //   passing in hour and/or id as an argument during function call
     createBlock(displayHour, id);
     displayColor(displayHour, id);
+    getLocalStorage(id);
   }
 }
 
@@ -106,29 +107,35 @@ function displayColor(hour, elId) {
 
 // write function to get localStorage if it exists
 // ===========================================================================
-function getLocalStorage() {
-  calendarEvent = localStorage.getItem("calendar-event");
+var calendarEvent = [];
+function getLocalStorage(elID) {
+  var calendarEvents = localStorage.getItem("calendar-event");
   if (calendarEvents !== null) {
     calendarEvent = calendarEvents;
+
+    // code to append entries from localStorage here!
   }
 }
 
-// getLocalStorage();
 
 // write function to save event entered upon button click into localStorage
 // ===========================================================================
-var calendarEvent = [];
 function sendToLocalStorage(event) {
   event.preventDefault();
-  // var calendarEventText = $("textarea[name='calendar-event']").val();
-  // console.log(calendarEventText);
-  // calendarEvent.push(calendarEventText);
-  // console.log(calendarEvent);
 
   var btnClicked = $(event.target);
-  console.log(btnClicked.parent().contents().val());
-
-  localStorage.setItem("calendar-event", calendarEvent);
+  var event = btnClicked.parent().contents().val();
+  var eventId = btnClicked.parent().children()[0].id;
+  // store textarea entry and textarea id into an object
+  var eventInfo = {
+    event: event,
+    eventId: eventId,
+  };
+  // push object into array
+  calendarEvent.push(eventInfo);
+  console.log(calendarEvent);
+  // set array to localStorage
+  localStorage.setItem("calendar-event", JSON.stringify(calendarEvent));
 }
 
 // using event delegation, create event listener on save button for
