@@ -2,6 +2,7 @@
 var container = $(".container");
 
 // write function to display current day using moment.js
+// ======================================================
 function displayDate() {
   // set var for current date using moment.js
   var date = moment().format("dddd, MMMM Do");
@@ -13,9 +14,10 @@ function displayDate() {
 
 displayDate();
 
-// write function which dynamically creates a card,
+// write function which dynamically creates a block,
 // which displays "hour", a textblock, and a button
-function createBlock(time) {
+// =======================================================
+function createBlock(time, id) {
   // target class of container from document
 
   // using jquery to create elements
@@ -38,31 +40,34 @@ function createBlock(time) {
   // column containing text area
   var textEl = $("<textarea>")
     .addClass("col-lg-10 form-control")
-    .attr({ id: "text-area", type: "text", name: "calendar-event" });
+    .attr({ id: id, type: "text", name: "calendar-event" });
 
   // column containing button
   var saveBtn = $("<input>")
-    .attr({"type": "submit", "value": "submit"})
+    .attr({ type: "submit", value: "submit" })
     .addClass("saveBtn col-lg-2");
-//   var idiomatic = $("<i>").text("Save");
+  //   var idiomatic = $("<i>").text("Save");
 
   // using jquery to append elements to document
   hourEl.append(hourlyTime);
-//   saveBtn.append(idiomatic);
+  //   saveBtn.append(idiomatic);
   formEl.append(textEl, saveBtn);
   divWithForm.append(formEl);
   timeBlock.append(hourEl, divWithForm);
   container.append(timeBlock);
 }
 
-// write function which appends card to document for the hours of
+// write function which appends block to document for the hours of
 // 9 - 5 using moment.js
+// ====================================================================
 function appendBlockWithTime() {
   // set to negative value to account for numerator during first iteration of for loop
   // this allows the setHour of 9am to add 0 hours and remain at 9am, but increase
   // by 1 hour with each successive iteration
   var num = -1;
   for (i = 0; i <= 8; i++) {
+    // argument to pass into createBlock function
+    var id = "text-area-" + [i];
     // numerator increases by 1
     var numerator = (num += 1);
     var setHour = moment().set("hour", 13);
@@ -72,8 +77,8 @@ function appendBlockWithTime() {
     var displayHour = addHour.format("h a");
 
     //   passing in hour as an argument during function call
-    createBlock(displayHour);
-    displayColor(displayHour);
+    createBlock(displayHour, id);
+    displayColor(displayHour, id);
   }
 }
 
@@ -81,44 +86,52 @@ appendBlockWithTime();
 
 // Write function to display each timeblock in past, present, or future
 // colors based on css classes
-function displayColor(hour) {
+// =======================================================================
+// pass in hour and element Id as arguments
+function displayColor(hour, elId) {
+  // current hour in fromat Hour(am/pm) from moment.js for comparison
+  // with hour argument passed in from appendBlockWithtime function
   var now = moment().format("h a");
-  var textArea = $("#text-area");
-
+  // passing in unique element Id from appendBlockWithTime function
+  var textArea = $("#" + elId + "");
+  // conditional statements adding class based upon hour of day
   if (hour < now) {
     textArea.addClass("past");
+  } else if (hour === now) {
+    textArea.addClass("present");
+  } else if (hour > now) {
+    textArea.addClass("future");
   }
-  // else if (hour === now) {
-  //   textArea.addClass("present");
-  // } else if (hour > now) {
-  //   textArea.addClass("future");
-  // }
-
-  console.log("current hour " + now);
-  console.log("calender hour " + hour);
-
-  console.log(hour < now);
-  // console.log(moment(hour).isBefore(now));
-
-  // console.log(hour === now);
-  // console.log(moment(hour).isSame(now));
-
-  // console.log(hour > now);
-  // console.log(moment(hour).isAfter(now));
-
-  // console.log(moment(hour).isBefore(now));
-  // console.log(!(moment(hour).isBefore(now)));
-  // console.log(moment(hour) === moment(now));
 }
 
-// write function to save event entered upon button click into
-// localstorage
+// write function to get localStorage if it exists
+// ===========================================================================
+function getLocalStorage() {
+  calendarEvent = localStorage.getItem("calendar-event");
+  if (calendarEvents !== null) {
+    calendarEvent = calendarEvents;
+  }
+}
+
+// getLocalStorage();
+
+// write function to save event entered upon button click into localStorage
+// ===========================================================================
+var calendarEvent = [];
 function sendToLocalStorage(event) {
   event.preventDefault();
-  var calendarEvent = $('textarea[name="calendar-event"]').val();
-  console.log(calendarEvent);
+  // var calendarEventText = $("textarea[name='calendar-event']").val();
+  // console.log(calendarEventText);
+  // calendarEvent.push(calendarEventText);
+  // console.log(calendarEvent);
+
+  var btnClicked = $(event.target);
+  console.log(btnClicked.parent().contents().val());
+
+  localStorage.setItem("calendar-event", calendarEvent);
 }
 
 // using event delegation, create event listener on save button for
 // dynamic content
+// ===========================================================================
 container.on("click", ".saveBtn", sendToLocalStorage);
