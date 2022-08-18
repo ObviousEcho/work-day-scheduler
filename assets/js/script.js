@@ -13,7 +13,6 @@ function displayDate() {
   currentDay.text(date);
 }
 
-displayDate();
 
 // write function which dynamically creates a block,
 // which displays "hour", a textblock, and a button
@@ -24,31 +23,31 @@ function createBlock(time, id) {
   // using jquery to create elements
   // timeBlock creates div as a row
   var timeBlock = $("<div>").addClass("row");
-
+  
   //   column containing event time
   var hourEl = $("<div>").addClass("col-lg-2 hour");
   var hourlyTime = $("<p>")
-    .text(time)
-    .css("font-weight", "bold")
-    .attr("id", "hour");
-
+  .text(time)
+  .css("font-weight", "bold")
+  .attr("id", "hour");
+  
   // column containing div with child form
   var divWithForm = $("<div>").addClass("col-lg-10");
-
+  
   // form with class row
   var formEl = $("<form>").addClass("row");
-
+  
   // column containing text area
   var textEl = $("<textarea>")
-    .addClass("col-lg-10 form-control")
-    .attr({ id: id, type: "text", name: "calendar-event" });
-
+  .addClass("col-lg-10 form-control")
+  .attr({ id: id, type: "text", name: "calendar-event" });
+  
   // column containing button
   var saveBtn = $("<input>")
-    .attr({ type: "submit", value: "submit" })
+  .attr({ type: "submit", value: "submit" })
     .addClass("saveBtn col-lg-2");
   //   var idiomatic = $("<i>").text("Save");
-
+  
   // using jquery to append elements to document
   hourEl.append(hourlyTime);
   //   saveBtn.append(idiomatic);
@@ -76,33 +75,33 @@ function appendBlockWithTime() {
     var addHour = moment(setHour).add(numerator, "h");
     // sets display format
     var displayHour = addHour.format("h a");
+    var milHour = addHour.format("HH");
 
     //   passing in hour and/or id as an argument during function call
     createBlock(displayHour, id);
-    displayColor(displayHour, id);
+    displayColor(milHour, id);
     getLocalStorage();
   }
 }
 
-appendBlockWithTime();
-appendToCalendar();
 
 // Write function to display each timeblock in past, present, or future
 // colors based on css classes
 // =======================================================================
 // pass in hour and element Id as arguments
-function displayColor(hour, elId) {
+function displayColor(milHour, elId) {
   // current hour in fromat Hour(am/pm) from moment.js for comparison
   // with hour argument passed in from appendBlockWithtime function
-  var now = moment().format("h a");
+  var now = moment().format("HH");
+
   // passing in unique element Id from appendBlockWithTime function
   var textArea = $("#" + elId + "");
   // conditional statements adding class based upon hour of day
-  if (hour < now) {
+  if (milHour < now) {
     textArea.addClass("past");
-  } else if (hour === now) {
+  } else if (milHour === now) {
     textArea.addClass("present");
-  } else if (hour > now) {
+  } else if (milHour > now) {
     textArea.addClass("future");
   }
 }
@@ -120,7 +119,7 @@ function getLocalStorage() {
 // ===========================================================================
 function sendToLocalStorage(event) {
   event.preventDefault();
-
+  
   var btnClicked = $(event.target);
   var event = btnClicked.parent().contents().val();
   var eventId = btnClicked.parent().children()[0].id;
@@ -147,7 +146,7 @@ function appendToCalendar() {
     var elementId = $('#' + id + '')
     // set textContent to document
     elementId.text(event);
-
+    
   }
 }
 
@@ -155,3 +154,7 @@ function appendToCalendar() {
 // dynamic content
 // ===========================================================================
 container.on("click", ".saveBtn", sendToLocalStorage);
+
+displayDate();
+appendBlockWithTime();
+appendToCalendar();
