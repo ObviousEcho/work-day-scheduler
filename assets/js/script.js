@@ -1,5 +1,6 @@
 // global var's
 var container = $(".container");
+var calendarEvent = [];
 
 // write function to display current day using moment.js
 // ======================================================
@@ -70,20 +71,21 @@ function appendBlockWithTime() {
     var id = "text-area-" + [i];
     // numerator increases by 1
     var numerator = (num += 1);
-    var setHour = moment().set("hour", 13);
+    var setHour = moment().set("hour", 9);
     // with each iteratoin setHour increases by numerator
     var addHour = moment(setHour).add(numerator, "h");
     // sets display format
     var displayHour = addHour.format("h a");
-    
+
     //   passing in hour and/or id as an argument during function call
     createBlock(displayHour, id);
     displayColor(displayHour, id);
-    getLocalStorage(id);
+    getLocalStorage();
   }
 }
 
 appendBlockWithTime();
+appendToCalendar();
 
 // Write function to display each timeblock in past, present, or future
 // colors based on css classes
@@ -107,16 +109,12 @@ function displayColor(hour, elId) {
 
 // write function to get localStorage if it exists
 // ===========================================================================
-var calendarEvent = [];
-function getLocalStorage(elID) {
-  var calendarEvents = localStorage.getItem("calendar-event");
+function getLocalStorage() {
+  var calendarEvents = JSON.parse(localStorage.getItem("calendar-event"));
   if (calendarEvents !== null) {
     calendarEvent = calendarEvents;
-
-    // code to append entries from localStorage here!
   }
 }
-
 
 // write function to save event entered upon button click into localStorage
 // ===========================================================================
@@ -133,9 +131,24 @@ function sendToLocalStorage(event) {
   };
   // push object into array
   calendarEvent.push(eventInfo);
-  console.log(calendarEvent);
   // set array to localStorage
   localStorage.setItem("calendar-event", JSON.stringify(calendarEvent));
+}
+
+// write function which appends events from localStorage to calendar
+// ====================================================================
+function appendToCalendar() {
+  // loop through global var calendarEvent
+  for (i = 0; i < calendarEvent.length; i++) {
+    // destructure array/objects
+    var event = calendarEvent[i].event;
+    var id = calendarEvent[i].eventId;
+    // set jquery selector
+    var elementId = $('#' + id + '')
+    // set textContent to document
+    elementId.text(event);
+
+  }
 }
 
 // using event delegation, create event listener on save button for
