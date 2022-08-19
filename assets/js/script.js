@@ -70,7 +70,7 @@ function appendBlockWithTime() {
     var id = "text-area-" + [i];
     // numerator increases by 1
     var numerator = (num += 1);
-    var setHour = moment().set("hour", 9);
+    var setHour = moment().set("hour", 17);
     // with each iteratoin setHour increases by numerator
     var addHour = moment(setHour).add(numerator, "h");
     // sets display format
@@ -121,12 +121,12 @@ function sendToLocalStorage(event) {
   event.preventDefault();
   
   var btnClicked = $(event.target);
-  var event = btnClicked.parent().contents().val();
-  var eventId = btnClicked.parent().children()[0].id;
+  var calEvent = btnClicked.parent().contents().val();
+  var calEventId = btnClicked.parent().children()[0].id;
   // store textarea entry and textarea id into an object
   var eventInfo = {
-    event: event,
-    eventId: eventId,
+    calEvent: calEvent,
+    calEventId: calEventId,
   };
   // push object into array
   calendarEvent.push(eventInfo);
@@ -140,12 +140,12 @@ function appendToCalendar() {
   // loop through global var calendarEvent
   for (i = 0; i < calendarEvent.length; i++) {
     // destructure array/objects
-    var event = calendarEvent[i].event;
-    var id = calendarEvent[i].eventId;
+    var calEvent = calendarEvent[i].calEvent;
+    var calId = calendarEvent[i].calEventId;
     // set jquery selector
-    var elementId = $('#' + id + '')
+    var elementId = $('#' + calId + '')
     // set textContent to document
-    elementId.text(event);
+    elementId.text(calEvent);
     
   }
 }
