@@ -19,6 +19,7 @@ This small project has focused on the usage of Web API's to interact with the DO
 
 ### Third Party API's
 
+* jQuery
 * Bootstrap
 *  Moment.js
 
