@@ -70,7 +70,7 @@ function appendBlockWithTime() {
     var id = "text-area-" + [i];
     // numerator increases by 1
     var numerator = (num += 1);
-    var setHour = moment().set("hour", 17);
+    var setHour = moment().set("hour", 9);
     // with each iteratoin setHour increases by numerator
     var addHour = moment(setHour).add(numerator, "h");
     // sets display format
